@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "kappa-client",
+  "version": "${version}",
+  "name": "kappa-client",
+  "description": "A hack for crystal hvh",
+  "authors": [
+    "slmpc"
+  ],
+  "contact": {
+    "website": "slmpc.github.io",
+    "repo": "https://github.com/slmpc/kappa-client"
+  },
+  "license": "GPL-3.0",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.slmpc.kappaclient.Kappa::INSTANCE"
+    ]
+  },
+  "mixins": [
+    "kappa-client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.6",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}

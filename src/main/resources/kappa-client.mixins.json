@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.slmpc.kappaclient.asm",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "mixin.MinecraftClientMixin",
+    "mixin.KeyboardMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
