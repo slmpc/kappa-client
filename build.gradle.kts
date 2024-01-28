@@ -6,6 +6,7 @@ val loader_version: String by project
 val mod_version: String by project
 val maven_group: String by project
 val fabric_version: String by project
+val fabric_kotlin_version: String by project
 
 
 plugins {
@@ -43,11 +44,9 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
 
-    libImpl("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
-    libImpl("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     libImpl("org.reflections:reflections:0.10.2")
-
 
     libImpl.dependencies.forEach {
         implementation(it)

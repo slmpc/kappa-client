@@ -67,11 +67,11 @@ abstract class Module(
     open fun onEnable(run: () -> Unit) = enableCustomers.add(run)
     open fun onDisable(run: () -> Unit) = disableCustomers.add(run)
 
-    protected fun enable() {
+    fun enable() {
         isEnabled = true
     }
 
-    protected fun disable() {
+    fun disable() {
         isEnabled = false
     }
 

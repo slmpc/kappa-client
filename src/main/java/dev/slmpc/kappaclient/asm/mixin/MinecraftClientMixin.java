@@ -3,6 +3,7 @@ package dev.slmpc.kappaclient.asm.mixin;
 import dev.slmpc.kappaclient.event.impl.DisconnectEvent;
 import dev.slmpc.kappaclient.event.impl.GameLoopEvent;
 import dev.slmpc.kappaclient.event.impl.JoinWorldEvent;
+import dev.slmpc.kappaclient.event.impl.TickEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
@@ -27,6 +28,16 @@ public class MinecraftClientMixin {
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("RETURN"))
     public void disconnect(Screen screen, CallbackInfo ci) {
         new DisconnectEvent().post();
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void onTickPre(CallbackInfo ci) {
+        TickEvent.Pre.INSTANCE.post();
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void onTickPost(CallbackInfo ci) {
+        TickEvent.Post.INSTANCE.post();
     }
 
 }

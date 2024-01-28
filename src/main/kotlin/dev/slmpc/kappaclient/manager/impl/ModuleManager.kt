@@ -10,7 +10,7 @@ import dev.slmpc.kappaclient.module.Module
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.system.measureTimeMillis
 
-object ModuleManagers: AbstractManager() {
+object ModuleManager: AbstractManager() {
 
     init {
         safeEventListener<KeyEvent> { event ->
@@ -32,6 +32,8 @@ object ModuleManagers: AbstractManager() {
                 .forEach {
                     moduleImpls.add(it)
                 }
+
+            moduleImpls.sortBy { it.name.toString() }
         }
 
         LoggerHelper.logInfo("Loaded ${moduleImpls.size} module(s), it took time: ${time}ms")
