@@ -1,9 +1,6 @@
 package dev.slmpc.kappaclient.asm.mixin;
 
-import dev.slmpc.kappaclient.event.impl.DisconnectEvent;
-import dev.slmpc.kappaclient.event.impl.GameLoopEvent;
-import dev.slmpc.kappaclient.event.impl.JoinWorldEvent;
-import dev.slmpc.kappaclient.event.impl.TickEvent;
+import dev.slmpc.kappaclient.event.impl.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
@@ -18,6 +15,11 @@ public class MinecraftClientMixin {
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;startTick()V"))
     public void run(CallbackInfo ci) {
         GameLoopEvent.Tick.INSTANCE.post();
+    }
+
+    @Inject(method = "run", at = @At(value = "TAIL"))
+    public void onQuit(CallbackInfo ci) {
+        new CloseGameEvent().post();
     }
 
     @Inject(method = "joinWorld", at = @At("RETURN"))
