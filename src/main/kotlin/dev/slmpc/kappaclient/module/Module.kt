@@ -1,6 +1,7 @@
 package dev.slmpc.kappaclient.module
 
 import dev.slmpc.kappaclient.event.EventBus
+import dev.slmpc.kappaclient.module.impl.misc.Notifications
 import dev.slmpc.kappaclient.settings.*
 import dev.slmpc.kappaclient.util.ChatUtils.sendMessage
 import dev.slmpc.kappaclient.util.interfaces.Description
@@ -47,14 +48,14 @@ abstract class Module(
         enableCustomers.add {
             EventBus.subscribe(this)
             runSafe {
-                sendMessage("$name ${Formatting.GREEN}Enabled")
+                if (Notifications.isEnabled) sendMessage("$name ${Formatting.GREEN}Enabled")
             }
         }
 
         disableCustomers.add {
             EventBus.unsubscribe(this)
             runSafe {
-                sendMessage("$name ${Formatting.RED}Disabled")
+                if (Notifications.isEnabled) sendMessage("$name ${Formatting.RED}Disabled")
             }
         }
 
