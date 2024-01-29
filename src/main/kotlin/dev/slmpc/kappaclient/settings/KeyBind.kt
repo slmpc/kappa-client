@@ -14,7 +14,7 @@ data class KeyBind @JvmOverloads constructor(
     companion object {
         fun getKeyName(key: Int, scanCode: Int): String {
             return when (key) {
-                GLFW.GLFW_KEY_UNKNOWN -> "Unknown"
+                GLFW.GLFW_KEY_UNKNOWN -> "None"
                 GLFW.GLFW_KEY_ESCAPE -> "Esc"
                 GLFW.GLFW_KEY_GRAVE_ACCENT -> "Grave"
                 GLFW.GLFW_KEY_WORLD_1 -> "World 1"
