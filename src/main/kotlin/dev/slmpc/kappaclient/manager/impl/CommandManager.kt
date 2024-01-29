@@ -1,22 +1,31 @@
 package dev.slmpc.kappaclient.manager.impl
 
 import dev.slmpc.kappaclient.command.AbstractCommand
+import dev.slmpc.kappaclient.command.impl.*
 import dev.slmpc.kappaclient.event.impl.ChatEvent
 import dev.slmpc.kappaclient.event.safeEventListener
 import dev.slmpc.kappaclient.manager.AbstractManager
+import dev.slmpc.kappaclient.util.ChatUtils.sendMessage
 
 object CommandManager: AbstractManager() {
 
-    private val commandMap = hashMapOf<Array<String>, AbstractCommand>()
+    val commandMap = hashMapOf<Array<String>, AbstractCommand>()
     private var prefix = '.'
 
     override suspend fun load() {
+        add(ToggleCommand())
+        add(BindCommand())
+        add(HelpCommand())
+        add(ConfigCommand())
+        add(FriendCommand())
     }
 
     init {
         safeEventListener<ChatEvent> {
             if (it.message[0] == prefix) {
-                run(it.message)
+                if (!run(it.message)) {
+                    sendMessage("Can't find this command")
+                }
                 it.cancel()
             }
         }
