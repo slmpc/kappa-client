@@ -30,27 +30,16 @@ class EnumSetting<E> @JvmOverloads constructor(
     description: CharSequence = "",
     visibility: () -> Boolean = { true }
 ) : AbstractSetting<E>(name, value, description, visibility) where E : Enum<E> {
-    private var index = 0
 
     @Throws(NoSuchFieldException::class)
     fun forwardLoop() {
-        index = if (index < getModes().size - 1) ++index else 0
-        this.value = getModes()[index]
+        this.value = this.value::class.java.enumConstants[(value.ordinal + 1) % value::class.java.enumConstants.size]
     }
 
-    private fun getModes(): Array<out E> {
-        return this.value::class.java.enumConstants
-    }
-
-    @Suppress("unchecked_cast")
-    @Throws(NoSuchFieldException::class)
     fun setWithName(name: String) {
-        value::class
-            .java
-            .declaredFields
-            .find { it.name.equals(name, true) }
-            ?.also { it.isAccessible = true }
-            ?.also { value(it.get(null) as E) }
+        value::class.java.enumConstants.forEach {
+            if (it.name == name) value = it
+        }
     }
 }
 

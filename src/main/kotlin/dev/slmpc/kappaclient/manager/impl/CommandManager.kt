@@ -18,6 +18,7 @@ object CommandManager: AbstractManager() {
         add(HelpCommand())
         add(ConfigCommand())
         add(FriendCommand())
+        add(PrefixCommand())
     }
 
     init {
