@@ -19,6 +19,6 @@ internal object KernelScheduler : CoroutineDispatcher() {
     }
 }
 
-val classes = ClassUtils.findClasses("dev.skidderpollution.m7thh4ck") {
+val classes = ClassUtils.findClasses("dev.slmpc.kappaclient") {
     !it.contains("asm")
 }

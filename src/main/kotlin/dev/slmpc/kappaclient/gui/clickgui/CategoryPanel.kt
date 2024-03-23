@@ -3,7 +3,7 @@ package dev.slmpc.kappaclient.gui.clickgui
 import dev.slmpc.kappaclient.manager.impl.ModuleManager
 import dev.slmpc.kappaclient.module.Category
 import dev.slmpc.kappaclient.module.impl.client.ClickGUI
-import dev.slmpc.kappaclient.util.graphics.RenderUtils2D
+import dev.slmpc.kappaclient.util.graphics.Render2DUtils
 import dev.slmpc.kappaclient.util.graphics.color.ColorRGB
 import dev.slmpc.kappaclient.util.Wrapper.mc
 import dev.slmpc.kappaclient.util.font.TextUtils
@@ -11,16 +11,16 @@ import net.minecraft.client.gui.DrawContext
 
 class CategoryPanel(
     val category: Category,
-    var x: Int,
-    var y: Int,
-    var width: Int,
-    var height: Int
+    var x: Float,
+    var y: Float,
+    var width: Float,
+    var height: Float
 ) {
 
     private var dragging = false
     private var extended = true
-    private var dragX = 0
-    private var dragY = 0
+    private var dragX = 0.0f
+    private var dragY = 0.0f
 
     private val moduleButtons: MutableList<ModuleButton> = mutableListOf()
 
@@ -38,18 +38,21 @@ class CategoryPanel(
     }
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        RenderUtils2D.renderRoundedQuad(context.matrices, ColorRGB(80, 80, 80, 255),
-            x.toFloat(), y.toFloat(), x + width.toFloat(), y + height.toFloat(), 2.0, 2.0)
+        Render2DUtils.drawRect(context.matrices, x - 2f, y,
+            width + 4f, height, ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 100))
+
+        Render2DUtils.drawRectOutline(context.matrices, x - 2f, y,
+            width + 4f, height, ColorRGB(ClickGUI.oRed, ClickGUI.oGreen, ClickGUI.oBlue))
 
         val offset = (height / 2) - mc.textRenderer.fontHeight / 2
 
         TextUtils.drawString(context, category.displayString,
-            x + (width / 2.0f - mc.textRenderer.getWidth(category.displayString) / 2), y + offset.toFloat(),
+            x + (width / 2.0f - mc.textRenderer.getWidth(category.displayString) / 2), y + offset,
             ColorRGB(255, 255, 255), ClickGUI.shadow
         )
 
         TextUtils.drawString(context, if (extended) "-" else "+",
-            x + width - (offset) - mc.textRenderer.getWidth("+").toFloat(), y + offset.toFloat(),
+            x + width - (offset) - mc.textRenderer.getWidth("+"), y + offset,
             ColorRGB(255, 255, 255), ClickGUI.shadow
         )
 
@@ -65,8 +68,8 @@ class CategoryPanel(
             when (button) {
                 0 -> {  // 左键
                     dragging = true
-                    dragX = (mouseX - x).toInt()
-                    dragY = (mouseY - y).toInt()
+                    dragX = (mouseX - x).toFloat()
+                    dragY = (mouseY - y).toFloat()
                 }
                 1 -> {  // 右键
                     extended = !extended
@@ -89,7 +92,7 @@ class CategoryPanel(
     }
 
     private fun isHovered(mouseX: Double, mouseY: Double): Boolean {
-        return mouseX > x && mouseX < (x + width) && mouseY > y && mouseY < (y + height)
+        return mouseX > x - 2f && mouseX < (x + width + 4f) && mouseY > y && mouseY < (y + height)
     }
 
     fun updatePosition(mouseX: Int, mouseY: Int) {
@@ -102,19 +105,9 @@ class CategoryPanel(
     fun updateButtons() {
         var offset = height
 
-        for (modButton in moduleButtons) {
-            modButton.offset = offset
-
-            if (modButton.extended) {
-
-                modButton.components
-                    .filter { it.setting.visibility.invoke() }
-                    .forEach { _ ->
-                        offset += height
-                    }
-            }
-
-            offset += height
+        moduleButtons.forEach {
+            it.offset = offset
+            offset += if (it.extended) it.setOffset else height
         }
     }
 

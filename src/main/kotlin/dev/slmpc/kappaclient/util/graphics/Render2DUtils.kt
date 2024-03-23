@@ -2,14 +2,27 @@ package dev.slmpc.kappaclient.util.graphics
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.slmpc.kappaclient.util.graphics.color.ColorRGB
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.util.math.MathHelper
+import net.minecraft.util.math.Vec3d
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL40C
+import java.awt.Color
 import kotlin.math.cos
 import kotlin.math.sin
 
-object RenderUtils2D {
+object Render2DUtils {
+
+    fun injectAlpha(color: Color, alpha: Int): Color {
+        return Color(color.red, color.green, color.blue, MathHelper.clamp(alpha, 0, 255))
+    }
+
+    fun injectAlpha(color: ColorRGB, alpha: Int): ColorRGB {
+        return ColorRGB(color.r, color.g, color.b, MathHelper.clamp(alpha, 0, 255))
+    }
+
     fun drawRect(matrices: MatrixStack, x: Float, y: Float, width: Float, height: Float, c: ColorRGB) {
         val matrix = matrices.peek().positionMatrix
         val bufferBuilder = Tessellator.getInstance().buffer
@@ -21,6 +34,69 @@ object RenderUtils2D {
         bufferBuilder.vertex(matrix, x + width, y, 0.0f).color(c.r, c.g, c.b, c.a).next()
         bufferBuilder.vertex(matrix, x, y, 0.0f).color(c.r, c.g, c.b, c.a).next()
         Tessellator.getInstance().draw()
+        endRender()
+    }
+    fun drawRectOutline(matrices: MatrixStack, x: Float, y: Float, width: Float, height: Float, c: ColorRGB) {
+        matrices.push()
+
+        val matrix4 = matrices.peek().positionMatrix
+
+        val tessellator = Tessellator.getInstance()
+        val bufferBuilder = tessellator.buffer
+
+        RenderSystem.lineWidth(2f)
+
+        bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
+
+        bufferBuilder.vertex(matrix4, x, y, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+        bufferBuilder.vertex(matrix4, x + width, y, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+
+        bufferBuilder.vertex(matrix4, x, y, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+        bufferBuilder.vertex(matrix4, x, y + height, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+
+        bufferBuilder.vertex(matrix4, x + width, y + height, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+        bufferBuilder.vertex(matrix4, x + width, y + height, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+
+        bufferBuilder.vertex(matrix4, x + width, y + height, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+        bufferBuilder.vertex(matrix4, x + width, y, 3f)
+            .color(c.r, c.g, c.b, 255).next()
+
+        RenderSystem.disableDepthTest()
+        RenderSystem.disableBlend()
+
+        tessellator.draw()
+
+        matrices.pop()
+    }
+
+    fun draw2DGradientRect(
+        matrices: MatrixStack,
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+        leftBottomColor: Color,
+        leftTopColor: Color,
+        rightBottomColor: Color,
+        rightTopColor: Color
+    ) {
+        val matrix = matrices.peek().positionMatrix
+        val bufferBuilder = Tessellator.getInstance().buffer
+        setupRender()
+        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
+        bufferBuilder.vertex(matrix, right, top, 0.0f).color(rightTopColor.rgb).next()
+        bufferBuilder.vertex(matrix, left, top, 0.0f).color(leftTopColor.rgb).next()
+        bufferBuilder.vertex(matrix, left, bottom, 0.0f).color(leftBottomColor.rgb).next()
+        bufferBuilder.vertex(matrix, right, bottom, 0.0f).color(rightBottomColor.rgb).next()
+        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
         endRender()
     }
 

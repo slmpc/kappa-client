@@ -29,7 +29,7 @@ object ModuleManager: AbstractManager() {
         val time = measureTimeMillis {
             classes.asSequence()
                 .filter { Modifier.isFinal(it.modifiers) }
-                .filter { it.name.startsWith("dev.skidderpollution.m7thh4ck.module.impl") }
+                .filter { it.name.startsWith("dev.slmpc.kappaclient.module.impl") }
                 .filter { Module::class.java.isAssignableFrom(it) }
                 .map { it.instance as Module }
                 .forEach {
