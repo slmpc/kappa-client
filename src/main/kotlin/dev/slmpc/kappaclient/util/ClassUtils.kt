@@ -18,10 +18,10 @@ object ClassUtils {
         val classLoader = Thread.currentThread().contextClassLoader
         val packagePath = packageName.replace('.', '/')
 
-        val root = if (packageName.startsWith("dev.skidderpollution.m7thh4ck")) {
+        val root = if (packageName.startsWith("dev.slmpc.kappaclient")) {
             val thisFileName = this.javaClass.name.replace('.', '/') + ".class"
             val thisURL = classLoader.getResource(thisFileName)!!
-            val file = thisURL.file.substringBeforeLast(thisFileName.substringAfter("dev/skidderpollution/m7thh4ck"))
+            val file = thisURL.file.substringBeforeLast(thisFileName.substringAfter("dev/slmpc/kappaclient"))
             URL(thisURL.protocol, thisURL.host, file)
         } else {
             classLoader.getResource(packagePath)!!

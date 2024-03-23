@@ -16,7 +16,7 @@ object KappaAsyncLoader : IAsyncLoader {
     override suspend fun load() {
         classes.asSequence()
             .filter { Modifier.isFinal(it.modifiers) }
-            .filter { it.name.startsWith("dev.skidderpollution.m7thh4ck.manager.impl") }
+            .filter { it.name.startsWith("dev.slmpc.kappaclient.module.impl") }
             .filter { AbstractManager::class.java.isAssignableFrom(it) }
             .map { it.instance as AbstractManager }
             .sortedByDescending { it.priority }
