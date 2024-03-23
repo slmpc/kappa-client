@@ -36,7 +36,9 @@ repositories {
     }
 }
 
-val libImpl by configurations.creating
+val library by configurations.creating {
+    configurations.implementation.get().extendsFrom(this)
+}
 
 dependencies {
     minecraft("com.mojang:minecraft:${minecraft_version}")
@@ -44,13 +46,9 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
 
-    libImpl("org.reflections:reflections:0.10.2")
-
-    libImpl.dependencies.forEach {
-        implementation(it)
-    }
+    library(kotlin("stdlib"))
+    library("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 
 }
 
@@ -70,6 +68,18 @@ tasks.withType<JavaCompile> {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs = listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlin.contracts.ExperimentalContracts",
+            "-Xlambdas=indy",
+            "-Xjvm-default=all",
+            "-Xbackend-threads=0",
+            "-Xno-source-debug-extension"
+        )
+    }
+    compilerOptions {
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
     }
 }
 
@@ -78,6 +88,19 @@ java {
 }
 
 tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     from("LICENSE")
-    from(libImpl.map { if (it.isDirectory) it else zipTree(it) })
+
+    from(
+        library.map {
+            if (it.isDirectory) {
+                it
+            } else {
+                zipTree(it)
+            }
+        }
+    )
+
+    exclude("META-INF/*.RSA", "META-INF/*.DSA", "META-INF/*.SF")
 }

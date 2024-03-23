@@ -3,10 +3,11 @@ package dev.slmpc.kappaclient.manager.impl
 import dev.slmpc.kappaclient.event.impl.KeyEvent
 import dev.slmpc.kappaclient.event.safeEventListener
 import dev.slmpc.kappaclient.helper.LoggerHelper
-import dev.slmpc.kappaclient.helper.reflections
+import dev.slmpc.kappaclient.helper.classes
 import dev.slmpc.kappaclient.manager.AbstractManager
 import dev.slmpc.kappaclient.util.ClassUtils.instance
 import dev.slmpc.kappaclient.module.Module
+import java.lang.reflect.Modifier
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.system.measureTimeMillis
 
@@ -26,9 +27,11 @@ object ModuleManager: AbstractManager() {
 
     override suspend fun load() {
         val time = measureTimeMillis {
-            reflections.getSubTypesOf(Module::class.java)
-                .filter { it != Module::class.java }
-                .map { it.instance }
+            classes.asSequence()
+                .filter { Modifier.isFinal(it.modifiers) }
+                .filter { it.name.startsWith("dev.skidderpollution.m7thh4ck.module.impl") }
+                .filter { Module::class.java.isAssignableFrom(it) }
+                .map { it.instance as Module }
                 .forEach {
                     moduleImpls.add(it)
                 }

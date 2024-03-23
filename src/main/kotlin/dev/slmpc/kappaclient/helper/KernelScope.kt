@@ -1,5 +1,6 @@
 package dev.slmpc.kappaclient.helper
 
+import dev.slmpc.kappaclient.util.ClassUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -16,4 +17,8 @@ internal object KernelScheduler : CoroutineDispatcher() {
     override fun dispatch(context: CoroutineContext, block: Runnable) {
         singlePoolExecutor.submit(block)
     }
+}
+
+val classes = ClassUtils.findClasses("dev.skidderpollution.m7thh4ck") {
+    !it.contains("asm")
 }
