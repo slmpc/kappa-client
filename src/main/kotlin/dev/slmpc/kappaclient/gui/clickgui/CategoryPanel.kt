@@ -22,6 +22,8 @@ class CategoryPanel(
     private var dragX = 0.0f
     private var dragY = 0.0f
 
+    var componentsHeight = 0.0f
+
     private val moduleButtons: MutableList<ModuleButton> = mutableListOf()
 
     init {
@@ -39,10 +41,7 @@ class CategoryPanel(
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
         Render2DUtils.drawRect(context.matrices, x - 2f, y,
-            width + 4f, height, ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 100))
-
-        Render2DUtils.drawRectOutline(context.matrices, x - 2f, y,
-            width + 4f, height, ColorRGB(ClickGUI.oRed, ClickGUI.oGreen, ClickGUI.oBlue))
+            width + 4f, height, ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 120))
 
         val offset = (height / 2) - mc.textRenderer.fontHeight / 2
 
@@ -56,6 +55,13 @@ class CategoryPanel(
             ColorRGB(255, 255, 255), ClickGUI.shadow
         )
 
+        componentsHeight = 0.0f
+
+        if (extended) moduleButtons.forEach { it.refreshHeight() }
+
+        Render2DUtils.drawRect(context.matrices, x, y + height, width, componentsHeight,
+            ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 100))
+
         if (extended) {
             updateButtons()
             moduleButtons.forEach { it.render(context, mouseX, mouseY, delta) }
@@ -66,12 +72,12 @@ class CategoryPanel(
     fun mouseClicked(mouseX: Double, mouseY: Double, button: Int) {
         if (isHovered(mouseX, mouseY)) {
             when (button) {
-                0 -> {  // 左键
+                0 -> {  // left button
                     dragging = true
                     dragX = (mouseX - x).toFloat()
                     dragY = (mouseY - y).toFloat()
                 }
-                1 -> {  // 右键
+                1 -> {  // right button
                     extended = !extended
                 }
             }

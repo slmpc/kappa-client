@@ -28,11 +28,8 @@ class Slider(
 
     override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
         if (!numSet.visibility.invoke()) {
-            height = 0.0f
             return
         }
-
-        height = animate(height, parent.parent.height)
 
         val textOffset = (height / 2) - mc.textRenderer.fontHeight / 2
 
@@ -98,18 +95,11 @@ class Slider(
 
         if (numSet.value.toFloat() > numSet.maxValue.toFloat()) renderWidth = parent.parent.width
 
-        Render2DUtils.drawRect(context.matrices,
+        if (isHovered(mouseX.toDouble(), mouseY.toDouble())) Render2DUtils.drawRect(context.matrices,
             parent.parent.x, parent.parent.y + parent.offset + offset,
             parent.parent.width,
             height,
-            if (isHovered(mouseX.toDouble(), mouseY.toDouble())) ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 80)
-            else ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 60))
-
-        Render2DUtils.drawRectOutline(context.matrices,
-            parent.parent.x, parent.parent.y + parent.offset + offset,
-            parent.parent.width,
-            height,
-            ColorRGB(ClickGUI.oRed, ClickGUI.oGreen, ClickGUI.oBlue))
+            ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 80))
 
         Render2DUtils.drawRect(
             context.matrices, parent.parent.x, parent.parent.y + parent.offset + offset + height - 2f,

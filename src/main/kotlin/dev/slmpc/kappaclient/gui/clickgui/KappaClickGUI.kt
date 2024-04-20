@@ -1,28 +1,19 @@
 package dev.slmpc.kappaclient.gui.clickgui
 
-import com.mojang.blaze3d.systems.RenderSystem
 import dev.slmpc.kappaclient.module.Category
 import dev.slmpc.kappaclient.module.impl.client.ClickGUI
-import dev.slmpc.kappaclient.util.ChatUtils.sendMessage
 import dev.slmpc.kappaclient.util.graphics.Render2DUtils
 import dev.slmpc.kappaclient.util.graphics.color.ColorRGB
 import dev.slmpc.kappaclient.util.threads.runSafe
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
-import net.minecraft.util.Identifier
 
 object KappaClickGUI: Screen(Text.of("M7thh4ck-ClickGUI")) {
 
     var func: () -> Unit = {}
 
     private val frames: MutableList<CategoryPanel> = arrayListOf()
-
-    private val astolfo2 = Identifier("textures/astolfo2.png")
-    private val shana = Identifier("textures/037.png")
-    private val mahiro = Identifier("textures/mahiro.png")
-    private val qianshu = Identifier("textures/039.png")
-    private val roxy = Identifier("textures/roxy.png")
 
     init {
 

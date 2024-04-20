@@ -23,24 +23,14 @@ class ModeBox(
 
     override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
         if (!modeSet.visibility.invoke()) {
-            height = 0.0f
             return
         }
 
-        height = animate(height, parent.parent.height)
-
-        Render2DUtils.drawRect(context.matrices,
+        if (isHovered(mouseX.toDouble(), mouseY.toDouble())) Render2DUtils.drawRect(context.matrices,
             parent.parent.x, parent.parent.y + parent.offset + offset,
             parent.parent.width,
             height,
-            if (isHovered(mouseX.toDouble(), mouseY.toDouble())) ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 80)
-            else ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 60))
-
-        Render2DUtils.drawRectOutline(context.matrices,
-            parent.parent.x, parent.parent.y + parent.offset + offset,
-            parent.parent.width,
-            height,
-            ColorRGB(ClickGUI.oRed, ClickGUI.oGreen, ClickGUI.oBlue))
+            ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 80))
 
         val textOffset = (height / 2) - mc.textRenderer.fontHeight / 2
 

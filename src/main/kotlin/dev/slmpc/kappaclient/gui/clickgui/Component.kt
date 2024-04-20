@@ -22,6 +22,11 @@ abstract class Component(
 
     abstract fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int)
 
+    fun refreshHeight(): Float {
+        height = animate(height, parent.parent.height)
+        return height
+    }
+
     protected fun isHovered(mouseX: Double, mouseY: Double): Boolean {
         return mouseX > parent.parent.x && mouseX < (parent.parent.x + parent.parent.width)
                 && mouseY > parent.parent.y + parent.offset + offset

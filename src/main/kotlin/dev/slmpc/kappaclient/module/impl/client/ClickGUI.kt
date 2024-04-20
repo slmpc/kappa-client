@@ -21,9 +21,6 @@ object ClickGUI: Module(
     val nRed by setting("SliderRed", 120, 0..255, 1)
     val nGreen by setting("SliderGreen", 190, 0..255, 1)
     val nBlue by setting("SliderBlue", 255, 0..255, 1)
-    val oRed by setting("OutlineRed", 110, 0..255, 1)
-    val oGreen by setting("OutlineGreen", 160, 0..255, 1)
-    val oBlue by setting("OutlineBlue", 255, 0..255, 1)
     val shadow by setting("Shadow", true)
 
     init {

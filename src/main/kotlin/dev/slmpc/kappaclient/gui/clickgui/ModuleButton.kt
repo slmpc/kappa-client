@@ -47,18 +47,20 @@ class ModuleButton(val module: Module, val parent: CategoryPanel, var offset: Fl
         }
     }
 
-    fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        Render2DUtils.drawRect(context.matrices,
-            parent.x, parent.y + offset,
-            parent.width, parent.height,
-            if (isHovered(mouseX.toDouble(), mouseY.toDouble())) ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 60)
-            else ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 80))
+    fun refreshHeight() {
+        parent.componentsHeight += parent.height
 
-        Render2DUtils.drawRectOutline(context.matrices,
+        if (extended) components.forEach {
+            if (it.setting.visibility.invoke()) parent.componentsHeight += it.refreshHeight()
+            else it.height = 0.0f
+        }
+    }
+
+    fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+        if (isHovered(mouseX.toDouble(), mouseY.toDouble())) Render2DUtils.drawRect(context.matrices,
             parent.x, parent.y + offset,
             parent.width, parent.height,
-            ColorRGB(ClickGUI.oRed, ClickGUI.oGreen, ClickGUI.oBlue)
-        )
+            ColorRGB(ClickGUI.red, ClickGUI.green, ClickGUI.blue, 60))
 
         TextUtils.drawString(context, module.name.toString(),
             parent.x + textOffset, parent.y + offset + textOffset,
