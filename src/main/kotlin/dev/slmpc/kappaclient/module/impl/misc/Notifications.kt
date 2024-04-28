@@ -8,5 +8,4 @@ object Notifications: Module(
     defaultEnable = true,
     category = Category.MISC,
     description = ""
-) {
-}
+)

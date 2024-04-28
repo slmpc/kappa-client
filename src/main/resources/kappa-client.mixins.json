@@ -8,7 +8,9 @@
   "client": [
     "mixin.MinecraftClientMixin",
     "mixin.KeyboardMixin",
-    "mixin.ClientPlayNetworkHandlerMixin"
+    "mixin.ClientPlayNetworkHandlerMixin",
+    "mixin.ClientConnectionMixin",
+    "mixin.ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

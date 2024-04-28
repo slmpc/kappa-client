@@ -52,6 +52,10 @@ dependencies {
 
 }
 
+loom {
+    accessWidenerPath.assign(file("src/main/resources/kappa-client.accesswidener"))
+}
+
 tasks.processResources {
     inputs.property("version", project.version)
 
